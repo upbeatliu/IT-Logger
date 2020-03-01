@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { addTech } from '../../actions/techActions'
 import M from 'materialize-css/dist/js/materialize.min.js'
 
-const AddTechModal = () => {
+const AddTechModal = ({ addTech }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
@@ -9,7 +12,13 @@ const AddTechModal = () => {
     if (firstName === '' || lastName === '') {
       M.toast({ html: 'Please enter first name and last name' })
     } else {
-      console.log(firstName + ' ' + lastName);
+      const newTech = {
+        firstName,
+        lastName
+      }
+      addTech(newTech);
+      M.toast({ html: `${firstName} ${lastName} was added as a tech!` });
+
       //clear all fields
       setFirstName('');
       setLastName('');
@@ -23,14 +32,14 @@ const AddTechModal = () => {
         <div className='row'>
           <div className="input-field">
             <input type="text" name='firstName' value={firstName} onChange={e => setFirstName(e.target.value)} />
-            <label htmlFor="firstName" className='active'>Log First Name</label>
+            <label htmlFor="firstName" className='active'>First Name</label>
           </div>
         </div>
 
         <div className='row'>
           <div className="input-field">
             <input type="text" name='lastName' value={lastName} onChange={e => setLastName(e.target.value)} />
-            <label htmlFor="lastName" className='active'>Log Last Name</label>
+            <label htmlFor="lastName" className='active'>Last Name</label>
           </div>
         </div>
 
@@ -43,4 +52,8 @@ const AddTechModal = () => {
   )
 }
 
-export default AddTechModal
+AddTechModal.propTypes = {
+  addTech: PropTypes.func.isRequired
+}
+
+export default connect(null, { addTech })(AddTechModal)
